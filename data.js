@@ -38,7 +38,19 @@ export default [
   {f: [2.401e9, 2.483e9],           l: 1,       t: 'Wifi a/b/g/n',                    },
   {f: [5.150e9, 5.835e9],           l: 1,       t: 'Wifi n/ac',                       },
   {f: 103.7e6,                      l: 1,       t: 'NDR Info',                        },
-  {f: 50,                           l: 1,       t: 'EU Power Grid AC',                },
+  {f: 50,                           l: 1,       t: 'EU Power Grid',                },
+  {f: 60,                           l: 1,       t: 'US Power Grid',                },
   {f: 22.23508e9,                   l: 1,       t: 'Water resonance',                 },
   {f: 2.455e9,                      l: 1,       t: 'Microwave Oven',                  },
-].sort((a,b)=>(a.f[0] ? a.f[0] : a.f) - (b.f[0] ? b.f[0] : b.f));
+]
+  .map((p)=>{
+    if (typeof p.f === 'number') p.f = [p.f, p.f];
+    if (typeof p.f[1] !== 'number') p.f = [p.f[0], p.f[0]];
+    return {
+      f: p.f,
+      layer: p.l || 0,
+      label: p.t,
+      color: p.c || 'hsl('+(Math.random()*360)+'deg, 100%, 70%)',
+    };
+  })
+  .sort((a,b)=>(a.f[0] ? a.f[0] : a.f) - (b.f[0] ? b.f[0] : b.f));

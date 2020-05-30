@@ -47,21 +47,19 @@ function draw() {
   }
 
   const usedLayers = [];
-  function findLine(layer, range) {
+  function findRow(layer, range) {
     if (!usedLayers[layer]) usedLayers[layer] = [];
-    const occupiedLines = usedLayers[layer];
+    const occupiedRows = usedLayers[layer];
 
-    const isOccupiedLine = occupiedLines.map(l=>l.reduce((p,c)=>p || intersection(c, range), false));
-    let line = isOccupiedLine.indexOf(false);
-    if (!occupiedLines[line]) line = occupiedLines.push([range]) - 1;
-    else occupiedLines[line].push(range);
+    const isOccupiedRows = occupiedRows.map(l=>l.reduce((p,c)=>p || intersection(c, range), false));
+    let row = isOccupiedRows.indexOf(false);
+    if (!occupiedRows[row]) row = occupiedRows.push([range]) - 1;
+    else occupiedRows[row].push(range);
 
-    return line;
+    return row;
   }
 
-  function draw(f, layer, label = '', color = '#fff') {
-    if (typeof f === 'number') f = [f, f];
-    if (typeof f[1] !== 'number') f = [f[0], f[0]];
+  function draw({f, layer, label = '', color = '#fff'}) {
     const y = canvas.height / 2;
     const x1 = getPosX(f[0]);
     const x2 = getPosX(f[1]);
@@ -71,11 +69,10 @@ function draw() {
     const lineHeight = 12;
 
     const textX = x1 + ( range > textWidth+10 ? 5 : -textWidth - 5 );
-    const line = findLine(layer, [textX, x2]);
+    const row = findRow(layer, [textX, x2]);
     const startY = y - 5;
-    const midY = y + 5 + layer * lineHeight * 10 + line * lineHeight;
+    const midY = y + 5 + layer * lineHeight * 10 + row * lineHeight;
     const endY = midY + textHeight;
-
 
     drawLine(x1, startY, x1, endY, color);
     if (range > 0) {
@@ -92,16 +89,14 @@ function draw() {
     drawLine(0, y, canvas.width, y, '#aaddff');
 
     for (let i = 0; i<=highest; i++) {
-      draw(10**i, 0, 10**i + '/s');
+      const f = 10**i
+      draw({f: [f, f], layer: 0, label: 10**i + '/s'});
 
       const v = [2, 3, 4, 5, 6, 7, 8, 9];
-      v.forEach(v=>draw(v*10**i, 0));
+      v.forEach(v=>draw({f: [v*f, v*f], layer: 0}));
     }
   }
 
   drawAxis();
-  data.forEach((p, i)=>{
-    const color = p.c || (Math.random()*360);
-    draw(p.f, p.l || 0, p.t, 'hsl('+color+'deg,100%,70%)');
-  });
+  data.forEach((p, i)=>draw(p));
 };
