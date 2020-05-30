@@ -1,0 +1,11 @@
+html, body {
+  margin: 0;
+  background-color: #222224;
+  overflow-x: hidden;
+}
+
+canvas {
+  width: 100vw;
+  height: 99vh;
+  min-height: 800px;
+}
