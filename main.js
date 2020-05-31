@@ -3,6 +3,9 @@ import data from './data.js';
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
 
+const drawWidth = 6000;
+const drawHeight = 1000;
+
 (function init() {
   window.addEventListener('resize', reset);
   canvas.addEventListener('touchmove', (e)=>transform([...e.touches].map(t=>[t.clientX, t.clientY])));
@@ -30,7 +33,7 @@ let lastPoints = [];
 function transform(e = [], zoom = 0) {
   //console.log(e, zoom);
   ctx.translate(canvas.width/2, canvas.height/2);
-  ctx.scale(1+zoom/100, 1+zoom/100);
+  ctx.scale(1+Math.sign(zoom)/30, 1+Math.sign(zoom)/30);
   ctx.translate(-canvas.width/2, -canvas.height/2);
 
   if (lastPoints[0] && e[0]) {
@@ -90,7 +93,7 @@ function draw() {
 
   function getPosX(f) {
     const p = Math.log10(f)/highest - lowest/highest;
-    return p * canvas.width;
+    return p * drawWidth;
   }
 
   const usedLayers = [];
@@ -107,7 +110,7 @@ function draw() {
   }
 
   function draw({f, layer, label = '', color = '#fff'}) {
-    const y = canvas.height / 2;
+    const y = drawHeight / 2;
     const x1 = getPosX(f[0]);
     const x2 = getPosX(f[1]);
     const range = x2 - x1;
@@ -131,9 +134,9 @@ function draw() {
     ctx.fillText(label, textX, endY);
   }
 
-  function drawAxis(y = canvas.height / 2) {
+  function drawAxis(y = drawHeight / 2) {
 
-    drawLine(0, y, canvas.width, y, '#aaddff');
+    drawLine(0, y, drawWidth, y, '#aaddff');
 
     for (let i = 0; i<=highest; i++) {
       const f = 10**i
