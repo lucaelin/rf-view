@@ -68,7 +68,7 @@ function draw() {
     const textHeight = ctx.measureText(label).actualBoundingBoxAscent;
     const lineHeight = 12;
 
-    const textX = x1 + ( range > textWidth+10 ? 5 : -textWidth - 5 );
+    const textX = range > textWidth+10 ? x1 + 5 : x2 - textWidth - 5;
     const row = findRow(layer, [textX, x2]);
     const startY = y - 5;
     const midY = y + 5 + layer * lineHeight * 10 + row * lineHeight;
