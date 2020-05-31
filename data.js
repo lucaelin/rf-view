@@ -2,9 +2,13 @@ function wl(m) {
   return 299792458 / m;
 }
 
-const human = -2.5
-const bands = -2
-const ieee  = -1
+const human = -2.5;
+const bands = -2;
+const ieee  = -1;
+const wire = 1;
+const rf = 2;
+const nature = 3;
+const av = 4;
 
 export default [
 //{f: 0,                            l: 0,       t: 'DC',                              },
@@ -33,22 +37,30 @@ export default [
   {f: [27e9, 40e9],                 l: ieee,    t: 'Ka Kurz-above',     },
   {f: [40e9, 75e9],                 l: ieee,    t: 'V',     },
   {f: [75e9, 110e9],                l: ieee,    t: 'W',     },
-  {f: [110e9, 300e9],               l: ieee,    t: 'G/mm Millimeter',     },
+  {f: [110e9, 300e9],               l: ieee,    t: 'G / mm',     },
 
-  {f: [2.401e9, 2.483e9],           l: 1,       t: 'Wifi a/b/g/n',                    },
-  {f: [5.150e9, 5.835e9],           l: 1,       t: 'Wifi n/ac',                       },
-  {f: 103.7e6,                      l: 1,       t: 'NDR Info',                        },
-  {f: 50,                           l: 1,       t: 'EU Power Grid',                },
-  {f: 60,                           l: 1,       t: 'US Power Grid',                },
-  {f: 22.23508e9,                   l: 1,       t: 'Water resonance',                 },
-  {f: 2.455e9,                      l: 1,       t: 'Microwave Oven',                  },
+  {f: [0.3e3, 3.4e3],               l: wire,    t: 'POTS / ISDN',                    },
+  {f: [2.401e9, 2.483e9],           l: rf,      t: 'Wifi a/b/g/n',                    },
+  {f: [5.150e9, 5.835e9],           l: rf,      t: 'Wifi n/ac',                       },
+  {f: 103.7e6,                      l: rf,      t: 'NDR Info',                        },
+  {f: 50,                           l: wire,    t: 'EU Power Grid',                },
+  {f: 60,                           l: wire,    t: 'US Power Grid',                },
+  {f: 22.23508e9,                   l: nature,  t: 'Water resonance',                 },
+  {f: 2.455e9,                      l: rf,      t: 'Microwave Oven',                  },
+  {f: 440,                          l: av,      t: 'Concert pitch A',                  },
+  {f: 8e3,                          l: av,      t: 'ISDN Samplerate',                  },
+  {f: 44.1e3,                       l: av,      t: 'CD Samplerate',                  },
+  {f: 48.0e3,                       l: av,      t: 'DVD Samplerate',                  },
+  {f: 24,                           l: av,      t: 'Cinema Framerate',                  },
+  {f: 50,                           l: av,      t: 'EU TV Framerate (PAL)',                  },
+  {f: 59.94,                        l: av,      t: 'US TV Framerate (NTSC)',                  },
 ]
   .map((p)=>{
     if (typeof p.f === 'number') p.f = [p.f, p.f];
     if (typeof p.f[1] !== 'number') p.f = [p.f[0], p.f[0]];
     return {
       f: p.f,
-      layer: p.l || 0,
+      layer: p.l || 1,
       label: p.t,
       color: p.c || 'hsl('+(Math.random()*360)+'deg, 100%, 70%)',
     };
