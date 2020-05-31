@@ -2,8 +2,59 @@ import data from './data.js';
 
 const canvas = document.querySelector('canvas');
 const ctx = canvas.getContext('2d');
-window.addEventListener('resize', draw);
-draw();
+
+(function init() {
+  window.addEventListener('resize', reset);
+  canvas.addEventListener('touchmove', (e)=>transform([...e.touches].map(t=>[t.clientX, t.clientY])));
+  canvas.addEventListener('touchend', (e)=>transform([]));
+  canvas.addEventListener('wheel', (e)=>transform([], e.deltaY));
+
+  let mousePressed = false;
+  canvas.addEventListener('mousedown', ()=>{mousePressed = true; transform();});
+  canvas.addEventListener('mouseup', ()=>{mousePressed = false; transform();});
+  canvas.addEventListener('mousemove', (e)=>mousePressed?transform([[e.clientX, e.clientY]]):'');
+
+  reset();
+})();
+
+function canvasRelative(e) {
+  const rect = canvas.getBoundingClientRect();
+  const transform = ctx.getTransform();
+  return e.map(e=>[
+    (e[0] - rect.left - transform.e) / transform.a,
+    (e[1] - rect.top - transform.f) / transform.d,
+  ]);
+}
+
+let lastPoints = [];
+function transform(e = [], zoom = 0) {
+  //console.log(e, zoom);
+  ctx.translate(canvas.width/2, canvas.height/2);
+  ctx.scale(1+zoom/100, 1+zoom/100);
+  ctx.translate(-canvas.width/2, -canvas.height/2);
+
+  if (lastPoints[0] && e[0]) {
+    const t = [e[0][0]-lastPoints[0][0], e[0][1]-lastPoints[0][1]];
+    ctx.translate(...t);
+  }
+
+  lastPoints = e;
+  clearCanvas();
+  draw();
+}
+
+function reset() {
+  const [{height, width}] = canvas.getClientRects();
+  canvas.width = width;
+  canvas.height = height;
+  draw();
+}
+function clearCanvas() {
+  ctx.save();
+  ctx.resetTransform();
+  ctx.clearRect(0,0, canvas.width, canvas.height);
+  ctx.restore();
+}
 
 function calcUpperBound(f) {
   return Math.ceil(Math.log10(f));
@@ -33,10 +84,6 @@ function drawLine(x1, y1, x2, y2, color = '#fff') {
 }
 
 function draw() {
-  const [{height, width}] = canvas.getClientRects();
-  canvas.width = width;
-  canvas.height = height;
-
   const lowest = 0;
   const highestData = data[data.length-1];
   const highest = calcUpperBound(highestData.f[1] ? highestData.f[1]: highestData.f);
