@@ -28,6 +28,11 @@ function canvasRelative(e) {
     (e[1] - rect.top - transform.f) / transform.d,
   ]);
 }
+function dist([x1, y1], [x2, y2]) {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  return Math.sqrt(dx*dx + dy*dy);
+}
 
 let lastPoints = [];
 function transform(e = [], zoom = 0) {
@@ -40,6 +45,14 @@ function transform(e = [], zoom = 0) {
     const t = [e[0][0]-lastPoints[0][0], e[0][1]-lastPoints[0][1]];
     ctx.translate(...t);
   }
+  if (lastPoints[0] && e[0] && lastPoints[1] && e[1]) {
+    const oldD = dist(...lastPoints);
+    const newD = dist(...e);
+    const zoom = newD / oldD;
+
+    ctx.scale(zoom, zoom);
+  }
+
 
   lastPoints = e;
   clearCanvas();
