@@ -14,6 +14,7 @@ const location = ['germany', 'eu', 'europe', 'emea', 'earth']; // todo dynamic l
 
 export default [
 //{f: 0,                            l: 0,       t: 'DC',                              },
+  {f: [1, 2],                       l: human,   t: 'Human heartbeat',                 },
   {f: [20, 20e3],                   l: human,   t: 'Human-audible range',             },
   {f: [wl(780e-9), wl(380e-9)],     l: human,   t: 'Human-visible range',             },
 
@@ -75,6 +76,8 @@ export default [
   {f: [915.4e6, 921.0e6],           l: rf,      t: 'GSM', d: 'T-GSM-900 Downlink',    },
   {f: [3.4e9, 4.2e9],               l: rf,      t: 'DVB-S',                           rin: 'america asia africa'},
   {f: [10.7e9, 12.75e9],            l: rf,      t: 'DVB-S',                           rin: 'europe'},
+  {f: [177.5e6, 226.5e6],           l: rf,      t: 'DVB-T',                           rin: 'europe'},
+  {f: [474.0e6, 786.0e6],           l: rf,      t: 'DVB-T',                           rin: 'europe'},
   {f: 1575.42e6,                    l: rf,      t: 'GPS',                             },
   {f: 1227.60e6,                    l: rf,      t: 'GPS',                             },
 
