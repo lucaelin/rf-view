@@ -10,7 +10,7 @@ const rf = 2;
 const nature = 3;
 const av = 4;
 
-const location = ['germany', 'eu', 'europe', 'earth']; // todo dynamic location
+const location = ['germany', 'eu', 'europe', 'emea', 'earth']; // todo dynamic location
 
 export default [
 //{f: 0,                            l: 0,       t: 'DC',                              },
@@ -47,10 +47,37 @@ export default [
   //{f: [2.3e6, 26.1e6],              l: rf,      t: 'AM SW',                           },
   {f: [87.5e6, 108e6],              l: rf,      t: 'FM radio',                        rex: 'japan'},
   {f: [76e6, 90e6],                 l: rf,      t: 'FM radio',                        rin: 'japan'},
-  {f: [2.401e9, 2.483e9],           l: rf,      t: 'Wifi a/b/g/n',                    },
-  {f: [5.150e9, 5.835e9],           l: rf,      t: 'Wifi n/ac',                       },
+  {f: [2.401e9, 2.483e9],           l: rf,      t: 'Wifi', d: 'a/b/g/n',              },
+  {f: [5.150e9, 5.835e9],           l: rf,      t: 'Wifi', d: 'n/ac',                 },
   {f: 103.7e6,                      l: rf,      t: 'NDR Info',                        rin: 'germany' },
   {f: 2.455e9,                      l: rf,      t: 'Microwave Oven',                  },
+  {f: [380.2e6, 389.8e6],           l: rf,      t: 'GSM', d: 'T-GSM-380 Uplink',      },
+  {f: [390.2e6, 399.8e6],           l: rf,      t: 'GSM', d: 'T-GSM-380 Downlink',    },
+  {f: [410.2e6, 419.8e6],           l: rf,      t: 'GSM', d: 'T-GSM-410 Uplink',      },
+  {f: [420.2e6, 429.8e6],           l: rf,      t: 'GSM', d: 'T-GSM-410 Downlink',    },
+  {f: [450.6e6, 457.6e6],           l: rf,      t: 'GSM', d: 'GSM-450 Uplink',        },
+  {f: [460.6e6, 467.6e6],           l: rf,      t: 'GSM', d: 'GSM-450 Downlink',      },
+  {f: [479.0e6, 486.0e6],           l: rf,      t: 'GSM', d: 'GSM-480 Uplink',        },
+  {f: [489.0e6, 496.0e6],           l: rf,      t: 'GSM', d: 'GSM-480 Downlink',      },
+  {f: [698.2e6, 716.2e6],           l: rf,      t: 'GSM', d: 'GSM-710 Uplink',        },
+  {f: [728.2e6, 746.2e6],           l: rf,      t: 'GSM', d: 'GSM-710 Downlink',      },
+  {f: [777.2e6, 792.2e6],           l: rf,      t: 'GSM', d: 'GSM-750 Uplink',        },
+  {f: [747.2e6, 762.2e6],           l: rf,      t: 'GSM', d: 'GSM-750 Downlink',      },
+  {f: [806.2e6, 821.2e6],           l: rf,      t: 'GSM', d: 'T-GSM-810 Uplink',      },
+  {f: [851.2e6, 866.2e6],           l: rf,      t: 'GSM', d: 'T-GSM-810 Downlink',    },
+  {f: [824.2e6, 848.8e6],           l: rf,      t: 'GSM', d: 'GSM-850 Uplink',        rin: 'cala nar'},
+  {f: [869.2e6, 893.8e6],           l: rf,      t: 'GSM', d: 'GSM-850 Downlink',      rin: 'cala nar'},
+  {f: [880.0e6, 915.0e6],           l: rf,      t: 'GSM', d: 'E-GSM-900 Uplink',      rin: 'apac emea'},
+  {f: [925.0e6, 960.0e6],           l: rf,      t: 'GSM', d: 'E-GSM-900 Downlink',    rin: 'apac emea'},
+  {f: [876.0e6, 915.0e6],           l: rf,      t: 'GSM', d: 'R-GSM-900 Uplink',      rin: 'apac emea'},
+  {f: [921.0e6, 960.0e6],           l: rf,      t: 'GSM', d: 'R-GSM-900 Downlink',    rin: 'apac emea'},
+  {f: [870.4e6, 876.0e6],           l: rf,      t: 'GSM', d: 'T-GSM-900 Uplink',      },
+  {f: [915.4e6, 921.0e6],           l: rf,      t: 'GSM', d: 'T-GSM-900 Downlink',    },
+  {f: [3.4e9, 4.2e9],               l: rf,      t: 'DVB-S',                           rin: 'america asia africa'},
+  {f: [10.7e9, 12.75e9],            l: rf,      t: 'DVB-S',                           rin: 'europe'},
+  {f: 1575.42e6,                    l: rf,      t: 'GPS',                             },
+  {f: 1227.60e6,                    l: rf,      t: 'GPS',                             },
+
   {f: [0.3e3, 130e3],               l: wire,    t: 'ISDN',                            },
   {f: [0.3e3, 3.4e3],               l: wire,    t: 'POTS',                            },
   {f: [138e3, 2.208e6],             l: wire,    t: 'ADSL+ (Annex B)',                 },
@@ -61,7 +88,9 @@ export default [
   {f: [111e6, 864e6],               l: wire,    t: 'Cable Downstream'                 },
   {f: 50,                           l: wire,    t: 'EU Power Grid',                   rin: 'europe' },
   {f: 60,                           l: wire,    t: 'US Power Grid',                   rin: 'usa' },
+
   {f: 22.23508e9,                   l: nature,  t: 'Water resonance',                 },
+
   {f: 440,                          l: av,      t: 'Concert pitch A',                 },
   {f: 8e3,                          l: av,      t: 'ISDN Samplerate',                 },
   {f: 44.1e3,                       l: av,      t: 'CD Samplerate',                   },
