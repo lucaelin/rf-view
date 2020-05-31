@@ -1,76 +1,11 @@
 import data from './data.js';
-
-const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d');
+import {setDraw, setFont, canvas, ctx, events as canvasEvents} from './canvas.js';
 
 const drawWidth = 6000;
 const drawHeight = 1000;
 
-(function init() {
-  window.addEventListener('resize', reset);
-  canvas.addEventListener('touchmove', (e)=>transform([...e.touches].map(t=>[t.clientX, t.clientY])));
-  canvas.addEventListener('touchend', (e)=>transform([]));
-  canvas.addEventListener('wheel', (e)=>transform([], e.deltaY));
-
-  let mousePressed = false;
-  canvas.addEventListener('mousedown', ()=>{mousePressed = true; transform();});
-  canvas.addEventListener('mouseup', ()=>{mousePressed = false; transform();});
-  canvas.addEventListener('mousemove', (e)=>mousePressed?transform([[e.clientX, e.clientY]]):'');
-
-  reset();
-})();
-
-function canvasRelative(e) {
-  const rect = canvas.getBoundingClientRect();
-  const transform = ctx.getTransform();
-  return e.map(e=>[
-    (e[0] - rect.left - transform.e) / transform.a,
-    (e[1] - rect.top - transform.f) / transform.d,
-  ]);
-}
-function dist([x1, y1], [x2, y2]) {
-  const dx = x2 - x1;
-  const dy = y2 - y1;
-  return Math.sqrt(dx*dx + dy*dy);
-}
-
-let lastPoints = [];
-function transform(e = [], zoom = 0) {
-  //console.log(e, zoom);
-  ctx.translate(canvas.width/2, canvas.height/2);
-  ctx.scale(1+Math.sign(zoom)/30, 1+Math.sign(zoom)/30);
-  ctx.translate(-canvas.width/2, -canvas.height/2);
-
-  if (lastPoints[0] && e[0]) {
-    const t = [e[0][0]-lastPoints[0][0], e[0][1]-lastPoints[0][1]];
-    ctx.translate(...t);
-  }
-  if (lastPoints[0] && e[0] && lastPoints[1] && e[1]) {
-    const oldD = dist(...lastPoints);
-    const newD = dist(...e);
-    const zoom = newD / oldD;
-
-    ctx.scale(zoom, zoom);
-  }
-
-
-  lastPoints = e;
-  clearCanvas();
-  draw();
-}
-
-function reset() {
-  const [{height, width}] = canvas.getClientRects();
-  canvas.width = width;
-  canvas.height = height;
-  draw();
-}
-function clearCanvas() {
-  ctx.save();
-  ctx.resetTransform();
-  ctx.clearRect(0,0, canvas.width, canvas.height);
-  ctx.restore();
-}
+setDraw(draw);
+setFont('ubuntu', 12, 8, 20);
 
 function calcUpperBound(f) {
   return Math.ceil(Math.log10(f));
@@ -105,8 +40,8 @@ function draw() {
   const highest = calcUpperBound(highestData.f[1] ? highestData.f[1]: highestData.f);
 
   function getPosX(f) {
-    const p = Math.log10(f)/highest - lowest/highest;
-    return p * drawWidth;
+    const p = Math.log10(f);
+    return p*500;
   }
 
   const usedLayers = [];
@@ -123,13 +58,13 @@ function draw() {
   }
 
   function draw({f, layer, label = '', color = '#fff'}) {
-    const y = drawHeight / 2;
+    const y = 0;
     const x1 = getPosX(f[0]);
     const x2 = getPosX(f[1]);
     const range = x2 - x1;
     const textWidth = ctx.measureText(label).width;
     const textHeight = ctx.measureText(label).actualBoundingBoxAscent;
-    const lineHeight = 12;
+    const lineHeight = parseFloat(ctx.font);
 
     const textX = range > textWidth+10 ? x1 + 5 : x2 - textWidth - 5;
     const row = findRow(layer, [textX, x2]);
@@ -147,12 +82,13 @@ function draw() {
     ctx.fillText(label, textX, endY);
   }
 
-  function drawAxis(y = drawHeight / 2) {
+  function drawAxis() {
 
-    drawLine(0, y, drawWidth, y, '#aaddff');
+    drawLine(0, 0, drawWidth, 0, '#aaddff');
 
     for (let i = 0; i<=highest; i++) {
       const f = 10**i
+      drawLine(-100000, 0, 1000000, 0, '#aaddff');
       draw({f: [f, f], layer: 0, label: 10**i + '/s'});
 
       const v = [2, 3, 4, 5, 6, 7, 8, 9];
