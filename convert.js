@@ -19,7 +19,7 @@ export const SI = (v, fixed = 3)=>{
       prefix = prefixes[i];
       v = v / 1000;
     }
-  } else {
+  } else if(v<1) {
     let prefixes = ['m', 'μ', 'n', 'p', 'f', 'a'];
     for(let i in prefixes) {
       if(v > 1.) break;
