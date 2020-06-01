@@ -1,5 +1,6 @@
 import data from './data.js';
 import {setDraw, setFont, canvas, ctx, events as canvasEvents} from './canvas.js';
+import * as convert from './convert.js';
 
 const drawWidth = 6000;
 const drawHeight = 1000;
@@ -89,7 +90,7 @@ function draw() {
     for (let i = 0; i<=highest; i++) {
       const f = 10**i
       drawLine(-100000, 0, 1000000, 0, '#aaddff');
-      draw({f: [f, f], layer: 0, label: 10**i + '/s'});
+      draw({f: [f, f], layer: 0, label: convert.SI(10**i, 0) + 'Hz'});
 
       const v = [2, 3, 4, 5, 6, 7, 8, 9];
       v.forEach(v=>draw({f: [v*f, v*f], layer: 0}));
