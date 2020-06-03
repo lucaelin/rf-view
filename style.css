@@ -10,8 +10,7 @@ html, body {
   overflow: hidden;
   overscroll-behavior: contain;
 }
-
-canvas {
+lsys-canvas {
   width: 100vw;
   height: 100vh;
   cursor: move;

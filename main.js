@@ -1,12 +1,16 @@
 import data from './data.js';
-import {setDraw, setFont, canvas, ctx, events as canvasEvents} from './canvas.js';
+//import {setDraw, setFont, canvas, ctx, events as canvasEvents} from './canvas.js';
 import * as convert from './convert.js';
 
 const drawWidth = 6000;
 const drawHeight = 1000;
 
-setDraw(draw);
-setFont('ubuntu', 12, 8, 20);
+const lcv = document.querySelector('lsys-canvas');
+lcv.addEventListener('cursor', ()=>{});
+const ctx = lcv.gfx;
+lcv.allowedTransform.zoom = false;
+lcv.draw = ()=>draw();
+
 
 function calcUpperBound(f) {
   return Math.ceil(Math.log10(f));
@@ -42,7 +46,7 @@ function draw() {
 
   function getPosX(f) {
     const p = Math.log10(f);
-    return p*500;
+    return p*200*lcv.currentTransform.zoom;
   }
 
   const usedLayers = [];
@@ -58,29 +62,50 @@ function draw() {
     return row;
   }
 
-  function draw({f, layer, label = '', color = '#fff'}) {
-    const y = 0;
-    const x1 = getPosX(f[0]);
-    const x2 = getPosX(f[1]);
-    const range = x2 - x1;
-    const textWidth = ctx.measureText(label).width;
-    const textHeight = ctx.measureText(label).actualBoundingBoxAscent;
+  function calculatePosition(entry) {
+    const {f, layer, label = ''} = entry;
+
+    const startX = getPosX(f[0]);
+    const endX = getPosX(f[1]);
+    const range = endX - startX;
+    const measure = ctx.measureText(label);
+    const textWidth = measure.width;
+
+    const textX = range > textWidth+10 ? startX + 5 : endX - textWidth - 5;
+    const row = findRow(layer, [Math.min(textX, startX), Math.max(textX, endX)]);
+
+    return {
+      data: entry,
+      layer,
+      row,
+      textX,
+      startX,
+      endX,
+    }
+  }
+
+  function draw({data: {label = '', color = '#fff'}, layer, row, textX, startX, endX}) {
+    const rowAdd = usedLayers.slice(0, layer).reduce((p, c)=>p+c.length, 1);
+    row += rowAdd;
+    //console.log(row, rowAdd);
+
+    const measure = ctx.measureText(label);
+    const textHeight = measure.actualBoundingBoxAscent;
     const lineHeight = parseFloat(ctx.font);
 
-    const textX = range > textWidth+10 ? x1 + 5 : x2 - textWidth - 5;
-    const row = findRow(layer, [textX, x2]);
-    const startY = y - 5;
-    const midY = y + 5 + layer * lineHeight * 10 + row * lineHeight;
-    const endY = midY + textHeight;
+    const layerStartY = 0;
+    const layerMidY = layerStartY + row * lineHeight;
+    const layerTextY = layerMidY + textHeight - 0;
+    const layerEndY = layerMidY + textHeight + 0;
 
-    drawLine(x1, startY, x1, endY, color);
-    if (range > 0) {
-      drawBox(x1, midY, x2, endY, color);
-      drawLine(x2, midY, x2, endY, color);
+    drawLine(startX, layerStartY, startX, layerEndY, color);
+    if (endX > startX) {
+      drawBox(startX, layerMidY, endX, layerEndY, color);
+      drawLine(endX, layerMidY, endX, layerEndY, color);
     }
-    ctx.fillStyle = color;
 
-    ctx.fillText(label, textX, endY);
+    ctx.fillStyle = color;
+    ctx.fillText(label, textX, layerTextY);
   }
 
   function drawAxis() {
@@ -90,13 +115,18 @@ function draw() {
     for (let i = 0; i<=highest; i++) {
       const f = 10**i
       drawLine(-100000, 0, 1000000, 0, '#aaddff');
-      draw({f: [f, f], layer: 0, label: convert.SI(10**i, 0) + 'Hz'});
+
+          const startX = getPosX(f);
+      drawLine(getPosX(f), -5, getPosX(f), 5);
+      // convert.SI(10**i, 0) + 'Hz'
 
       const v = [2, 3, 4, 5, 6, 7, 8, 9];
-      v.forEach(v=>draw({f: [v*f, v*f], layer: 0}));
+      v.forEach(v=>drawLine(getPosX(v*f), -5, getPosX(v*f), 5));
     }
   }
 
   drawAxis();
-  data.forEach((p, i)=>draw(p));
+  data
+    .map((p, i)=>calculatePosition(p))
+    .forEach((p, i)=>draw(p));
 };

@@ -3,20 +3,21 @@
   <head>
     <title>RF-View</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, height=device-height" />
     <meta http-equiv="Content-Security-Policy" content="
       default-src 'none';
       base-uri 'none';
       script-src 'self';
       connect-src 'self';
-      style-src 'self';
+      style-src 'self' 'unsafe-inline';
       img-src 'self';
       require-trusted-types-for 'script';
     " />
     <link rel="stylesheet" type="text/css" href="style.css"></link>
+    <script src="lsys-canvas.js" ></script>
     <script type="module" src="main.js" ></script>
   </head>
   <body>
-    <canvas />
+    <lsys-canvas><h1>RF-View</h1></lsys-canvas>
   </body>
 </html>

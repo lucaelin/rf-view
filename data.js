@@ -2,14 +2,14 @@ function wl(m) {
   return 299792458 / m;
 }
 
-const human = -3.5;
-const bands = -3;
-const ieee  = -2;
-const common = -1;
-const wire = 1;
-const rf = 2;
-const nature = 3;
-const av = 4;
+const human   =  1;
+const bands   =  2;
+const ieee    =  3;
+const common  =  1;
+const wire    =  4;
+const rf      =  5;
+const nature  =  6;
+const av      =  7;
 
 const location = ['germany', 'eu', 'europe', 'emea', 'earth']; // todo dynamic location
 
@@ -43,13 +43,13 @@ export default [
   {f: [75e9, 110e9],                l: ieee,    t: 'W',                               },
   {f: [110e9, 300e9],               l: ieee,    t: 'G / mm',                          },
 
-  {f: [1e20, wl(1e-15)],          l: common,  t: 'Gamma',                           },
-  {f: [wl(1e-8), 1e20],           l: common,  t: 'X-Ray',                           },
-  {f: [wl(320e-9), wl(1e-8)],      l: common,  t: 'UV',                              },
-  {f: [1e13, wl(780e-9)],          l: common,  t: 'IR',                              },
-  {f: [1e9, wl(1e-3)],            l: common,  t: 'Microwave',                       },
-  {f: [wl(1e4), 1e9],             l: common,  t: 'Wireless Comm',                   },
-  {f: [wl(1e7), 1e4],             l: common,  t: 'Wired AC',                   },
+  {f: [1e20, wl(1e-15)],            l: common,  t: 'Gamma',                           },
+  {f: [wl(1e-8), 1e20],             l: common,  t: 'X-Ray',                           },
+  {f: [wl(320e-9), wl(1e-8)],       l: common,  t: 'UV',                              },
+  {f: [1e13, wl(780e-9)],           l: common,  t: 'IR',                              },
+  {f: [1e9, wl(1e-3)],              l: common,  t: 'Microwave',                       },
+  {f: [wl(1e4), 1e9],               l: common,  t: 'Radio Broadcast',                 },
+  {f: [wl(1e7), 1e4],               l: common,  t: 'Wired AC',                        },
 
   {f: [148.5e3, 283.5e3],           l: rf,      t: 'AM LW',                           },
   {f: [525e3, 1606.5e3],            l: rf,      t: 'AM MW',                           rex: 'north-america australia philippines'},
