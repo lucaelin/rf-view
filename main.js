@@ -85,7 +85,7 @@ function draw() {
   }
 
   function draw({data: {label = '', color = '#fff'}, layer, row, textX, startX, endX}) {
-    const rowAdd = usedLayers.slice(0, layer).reduce((p, c)=>p+c.length, 1);
+    const rowAdd = usedLayers.slice(0, layer).reduce((p, c)=>p+c.length, 2);
     row += rowAdd;
     //console.log(row, rowAdd);
 
@@ -118,7 +118,10 @@ function draw() {
 
           const startX = getPosX(f);
       drawLine(getPosX(f), -5, getPosX(f), 5);
-      // convert.SI(10**i, 0) + 'Hz'
+      ctx.fillStyle = '#fff';
+      const label = convert.SI(10**i, 0) + 'Hz';
+      const measure = ctx.measureText(label)
+      ctx.fillText(label, getPosX(f) - measure.width , 17);
 
       const v = [2, 3, 4, 5, 6, 7, 8, 9];
       v.forEach(v=>drawLine(getPosX(v*f), -5, getPosX(v*f), 5));
