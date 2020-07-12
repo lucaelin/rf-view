@@ -26,6 +26,7 @@ class LsysCanvas extends HTMLElement {
 
   allowedTransform = {
     zoom: true,
+    zoomView: false,
     translate: [true, true],
   }
 
@@ -105,6 +106,7 @@ class LsysCanvas extends HTMLElement {
     });
 
     this.updateSize();
+    window.requestAnimationFrame(()=>this.updateTransform());
   }
 
   updateCursor(clientX, clientY) {
@@ -136,10 +138,16 @@ class LsysCanvas extends HTMLElement {
   }
 
   updateTransform(e = [], zoom = 0) {
+    console.log('tr');
     const lastPoints = this.currentTransform.lastPoints;
 
     //console.log(e, zoom);
-    this.currentTransform.zoom *= 1+Math.sign(zoom)/30;
+    this.currentTransform.zoom *= 1+Math.sign(zoom)/10;
+
+    if(this.allowedTransform.zoomView){
+      this.currentTransform.translate[0] *= 1+Math.sign(zoom)/10;
+      this.currentTransform.translate[1] *= 1+Math.sign(zoom)/10;
+    }
 
     if (lastPoints[0] && e[0]) {
       const t = vSub(lastPoints[0], e[0]);

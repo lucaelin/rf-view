@@ -87,6 +87,16 @@ export default [
   {f: [10.7e9, 12.75e9],            l: rf,      t: 'DVB-S',                           rin: 'europe'},
   {f: [177.5e6, 226.5e6],           l: rf,      t: 'DVB-T',                           rin: 'europe'},
   {f: [474.0e6, 786.0e6],           l: rf,      t: 'DVB-T',                           rin: 'europe'},
+
+  // https://www.thethingsnetwork.org/docs/lorawan/frequencies-by-country.html
+  {f: 433e6,                        l: rf,      t: 'LORA',                            rin: 'europe russia'},
+  {f: [863e6, 870e6],               l: rf,      t: 'LORA',                            rin: 'europe russia'},
+  {f: [865e6, 867e6],               l: rf,      t: 'LORA',                            rin: 'india'},
+  {f: [923e6, 925e6],               l: rf,      t: 'LORA',                            rin: 'indonesia brunei cambodia hong-kong laos taiwan thailan vietnam'},
+  {f: [902e6, 928e6],               l: rf,      t: 'LORA',                            rin: 'america', rex: 'brazil chile argentinia'},
+  {f: [915e6, 928e6],               l: rf,      t: 'LORA',                            rin: 'brazil chile argentinia new-zealand australia' },
+  {f: [920e6, 923e6],               l: rf,      t: 'LORA',                            rin: 'south-korea'},
+
   {f: 1575.42e6,                    l: rf,      t: 'GPS',                             },
   {f: 1227.60e6,                    l: rf,      t: 'GPS',                             },
 

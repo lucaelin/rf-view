@@ -2,13 +2,13 @@ import data from './data.js';
 //import {setDraw, setFont, canvas, ctx, events as canvasEvents} from './canvas.js';
 import * as convert from './convert.js';
 
-const drawWidth = 6000;
-const drawHeight = 1000;
+const baseWidth = 200;
 
 const lcv = document.querySelector('lsys-canvas');
 lcv.addEventListener('cursor', ()=>{});
 const ctx = lcv.gfx;
 lcv.allowedTransform.zoom = false;
+lcv.allowedTransform.zoomView = true;
 lcv.draw = ()=>draw();
 
 
@@ -46,7 +46,7 @@ function draw() {
 
   function getPosX(f) {
     const p = Math.log10(f);
-    return p*200*lcv.currentTransform.zoom;
+    return p*baseWidth*lcv.currentTransform.zoom;
   }
 
   const usedLayers = [];
@@ -109,19 +109,16 @@ function draw() {
   }
 
   function drawAxis() {
-
-    drawLine(0, 0, drawWidth, 0, '#aaddff');
-
+    drawLine(-100000, 0, 1000000, 0, '#aaddff');
     for (let i = 0; i<=highest; i++) {
-      const f = 10**i
-      drawLine(-100000, 0, 1000000, 0, '#aaddff');
+      const f = 10**i;
 
-          const startX = getPosX(f);
-      drawLine(getPosX(f), -5, getPosX(f), 5);
+      const startX = getPosX(f);
+      drawLine(startX, -5, startX, 5);
       ctx.fillStyle = '#fff';
       const label = convert.SI(10**i, 0) + 'Hz';
       const measure = ctx.measureText(label)
-      ctx.fillText(label, getPosX(f) - measure.width , 17);
+      ctx.fillText(label, startX - measure.width , 17);
 
       const v = [2, 3, 4, 5, 6, 7, 8, 9];
       v.forEach(v=>drawLine(getPosX(v*f), -5, getPosX(v*f), 5));
