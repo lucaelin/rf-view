@@ -138,7 +138,6 @@ class LsysCanvas extends HTMLElement {
   }
 
   updateTransform(e = [], zoom = 0) {
-    console.log('tr');
     const lastPoints = this.currentTransform.lastPoints;
 
     //console.log(e, zoom);

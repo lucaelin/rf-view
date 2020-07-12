@@ -6,7 +6,7 @@ export const add = async (a, b)=>await a + await b;
 export const sub = async (a, b)=>await a - await b;
 export const mul = async (a, b)=>await a * await b;
 export const div = async (a, b)=>await a / await b;
-export const SI = (v, fixed = 3)=>{
+export const SI = (v, fixed = 3, pad = 0)=>{
   if(!Number.isFinite(v)) return v.toString();
   let prefix = '';
   let sign = Math.sign(v);
@@ -28,7 +28,7 @@ export const SI = (v, fixed = 3)=>{
     }
   }
 
-  return (sign*v).toFixed(fixed) + '\u00A0' + prefix;
+  return (sign*v).toFixed(fixed).padStart(pad) + '\u00A0' + prefix;
 };
 export const time = (v)=>{
   if(!Number.isFinite(v)) return v.toString();

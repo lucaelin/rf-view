@@ -5,7 +5,7 @@ import * as convert from './convert.js';
 const baseWidth = 200;
 
 const lcv = document.querySelector('lsys-canvas');
-lcv.addEventListener('cursor', ()=>{});
+const info = document.querySelector('#info');
 const ctx = lcv.gfx;
 lcv.allowedTransform.zoom = false;
 lcv.allowedTransform.zoomView = true;
@@ -39,15 +39,26 @@ function drawLine(x1, y1, x2, y2, color = '#fff') {
   ctx.closePath();
 }
 
+function getPosX(f) {
+  const p = Math.log10(f);
+  return p*baseWidth*lcv.currentTransform.zoom;
+}
+
+function getFX(x) {
+  const p = x/baseWidth/lcv.currentTransform.zoom
+  return 10**p;
+}
+
+lcv.addEventListener('cursor', ({detail: {gfxRelative}})=>{
+  const f = getFX(gfxRelative[0]);
+  const matches = data.filter(d=>d.f[0] < f && d.f[1] > f);
+  info.textContent = matches.map(d=>`${d.f.map(f=>convert.SI(f, 0, 3) + 'Hz').join(' - ')}: ${d.label} ${d.description||''}`).join('\n')
+});
+
 function draw() {
   const lowest = 0;
   const highestData = data[data.length-1];
   const highest = calcUpperBound(highestData.f[1] ? highestData.f[1]: highestData.f);
-
-  function getPosX(f) {
-    const p = Math.log10(f);
-    return p*baseWidth*lcv.currentTransform.zoom;
-  }
 
   const usedLayers = [];
   function findRow(layer, range) {
