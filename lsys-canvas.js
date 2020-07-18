@@ -163,6 +163,9 @@ class LsysCanvas extends HTMLElement {
       const newD = dist(...e);
       const zoom = newD / oldD;
 
+      if(this.allowedTransform.zoomView[0]) this.currentTransform.translate[0] *= zoom;
+      if(this.allowedTransform.zoomView[1]) this.currentTransform.translate[1] *= zoom;
+
       this.currentTransform.zoom *= zoom;
     }
 

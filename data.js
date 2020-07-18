@@ -104,8 +104,8 @@ export default [
 
   {f: [0.3e3, 130e3],               l: wire,    t: 'ISDN',                            },
   {f: [0.3e3, 3.4e3],               l: wire,    t: 'POTS',                            },
-  {f: [138e3, 2.208e6],             l: wire,    t: 'ADSL+ (Annex B)',                 },
-  {f: [138e3, 35e6],                l: wire,    t: 'VDSL2 (Annex B)',                 },
+  {f: [138e3, 2.208e6],             l: wire,    t: 'ADSL+', d: 'Annex B',             },
+  {f: [138e3, 35e6],                l: wire,    t: 'VDSL2', d: 'Annex B',             },
   {f: [111e6, 864e6],               l: wire,    t: 'Cable DVB-C TV'                   },
   {f: [85e6, 111e6],                l: wire,    t: 'Cable FM-Radio'                   },
   {f: [5e6, 85e6],                  l: wire,    t: 'Cable Upstream'                   },
