@@ -13,6 +13,8 @@ const av      =  7;
 
 const location = ['germany', 'eu', 'europe', 'emea', 'earth']; // todo dynamic location
 
+const colors = {};
+
 export default [
 //{f: 0,                            l: 0,       t: 'DC',                              },
   {f: [1, 2],                       l: human,   t: 'Human heartbeat',                 },
@@ -124,11 +126,18 @@ export default [
   .map((p)=>{
     if (typeof p.f === 'number') p.f = [p.f, p.f];
     if (typeof p.f[1] !== 'number') p.f = [p.f[0], p.f[0]];
+
+    let color = 'hsl('+(Math.random()*360)+'deg, 100%, 70%)';
+    if (p.c) color = p.c;
+    else if (colors[p.t]) color = colors[p.t];
+
+    colors[p.t] = color;
+
     return {
       f: p.f,
       layer: p.l || 1,
       label: p.t,
-      color: p.c || 'hsl('+(Math.random()*360)+'deg, 100%, 70%)',
+      color,
       regionInclude: (p.rin || 'earth').toLowerCase(),
       regionExclude: (p.rex || '').toLowerCase(),
       description: p.d || '',

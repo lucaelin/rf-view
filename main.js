@@ -1,14 +1,17 @@
 import data from './data.js';
-//import {setDraw, setFont, canvas, ctx, events as canvasEvents} from './canvas.js';
 import * as convert from './convert.js';
 
-const baseWidth = 200;
+const baseWidth = 100;
 
 const lcv = document.querySelector('lsys-canvas');
 const info = document.querySelector('#info');
 const ctx = lcv.gfx;
 lcv.allowedTransform.zoom = false;
-lcv.allowedTransform.zoomView = true;
+lcv.allowedTransform.zoomView = [true, false];
+
+lcv.currentTransform.translate = [-lcv.gfxCanvas.width/3,-lcv.gfxCanvas.height/4];
+ctx.font = '16px ubuntu'
+
 lcv.draw = ()=>draw();
 
 
@@ -17,25 +20,30 @@ function calcUpperBound(f) {
 }
 
 function intersection(a,b) {
-  return a[0] < b[1] && a[1] > b[0];
+  const match = a[0] < b[1] && a[1] > b[0] ? 1 : 0;
+  if (match && (a[2] === b[2])) return -1;
+  return match;
 }
 
-function drawBox(x1, y1, x2, y2, color = '#fff') {
+function drawBox(x1, y1, x2, y2, color = '#fff', alpha = 1) {
   const a = ctx.globalAlpha;
   ctx.beginPath();
-  ctx.globalAlpha = 0.2;
+  ctx.globalAlpha = alpha;
   ctx.fillStyle = color;
   ctx.rect(x1, y1, x2 - x1, y2 - y1);
   ctx.fill();
   ctx.globalAlpha = a;
   ctx.closePath();
 }
-function drawLine(x1, y1, x2, y2, color = '#fff') {
+function drawLine(x1, y1, x2, y2, color = '#fff', alpha = 1) {
+  const a = ctx.globalAlpha;
   ctx.beginPath();
+  ctx.globalAlpha = alpha;
   ctx.strokeStyle = color;
   ctx.moveTo(x1, y1);
   ctx.lineTo(x2, y2);
   ctx.stroke();
+  ctx.globalAlpha = a;
   ctx.closePath();
 }
 
@@ -50,13 +58,14 @@ function getFX(x) {
 }
 
 lcv.addEventListener('cursor', ({detail: {gfxRelative}})=>{
-  const f = getFX(gfxRelative[0]);
-  const matches = data.filter(d=>d.f[0] < f && d.f[1] > f);
+  const f = [getFX(gfxRelative[0]-10), getFX(gfxRelative[0]+10)];
+  const matches = data.filter(d=>
+    d.f[0] < f[1] && d.f[1] > f[0]
+  );
   info.textContent = matches.map(d=>`${d.f.map(f=>convert.SI(f, 0, 3) + 'Hz').join(' - ')}: ${d.label} ${d.description||''}`).join('\n')
 });
 
 function draw() {
-  const lowest = 0;
   const highestData = data[data.length-1];
   const highest = calcUpperBound(highestData.f[1] ? highestData.f[1]: highestData.f);
 
@@ -66,11 +75,16 @@ function draw() {
     const occupiedRows = usedLayers[layer];
 
     const isOccupiedRows = occupiedRows.map(l=>l.reduce((p,c)=>p || intersection(c, range), false));
-    let row = isOccupiedRows.indexOf(false);
+    const collapsedRow = isOccupiedRows.indexOf(-1);
+    let row = isOccupiedRows.indexOf(0);
+    const collapsed = collapsedRow !== -1 && row === -1;
+    if (collapsed) row = collapsedRow;
     if (!occupiedRows[row]) row = occupiedRows.push([range]) - 1;
     else occupiedRows[row].push(range);
 
-    return row;
+    //const collapsed = false;
+
+    return [row, collapsed];
   }
 
   function calculatePosition(entry) {
@@ -83,40 +97,45 @@ function draw() {
     const textWidth = measure.width;
 
     const textX = range > textWidth+10 ? startX + 5 : endX - textWidth - 5;
-    const row = findRow(layer, [Math.min(textX, startX), Math.max(textX, endX)]);
+    const [row, collapsed] = findRow(layer, [Math.min(textX, startX), Math.max(textX, endX), label]);
 
     return {
       data: entry,
       layer,
       row,
+      collapsed,
       textX,
       startX,
       endX,
     }
   }
 
-  function draw({data: {label = '', color = '#fff'}, layer, row, textX, startX, endX}) {
+  function draw({data: {label = '', color = '#fff'}, layer, row, collapsed = false, textX, startX, endX}) {
     const rowAdd = usedLayers.slice(0, layer).reduce((p, c)=>p+c.length, 2);
     row += rowAdd;
     //console.log(row, rowAdd);
 
+    const padding = 4;
+
     const measure = ctx.measureText(label);
-    const textHeight = measure.actualBoundingBoxAscent;
-    const lineHeight = parseFloat(ctx.font);
+    const textHeight = measure.actualBoundingBoxAscent + padding;
+    const lineHeight = parseFloat(ctx.font) + padding;
 
     const layerStartY = 0;
     const layerMidY = layerStartY + row * lineHeight;
-    const layerTextY = layerMidY + textHeight - 0;
-    const layerEndY = layerMidY + textHeight + 0;
+    const layerTextY = layerMidY + textHeight - padding / 2;
+    const layerEndY = layerMidY + textHeight + padding / 2;
 
-    drawLine(startX, layerStartY, startX, layerEndY, color);
+    drawLine(startX, layerStartY, startX, layerEndY, color, collapsed?0.2:1);
     if (endX > startX) {
-      drawBox(startX, layerMidY, endX, layerEndY, color);
+      drawBox(startX, layerMidY, endX, layerEndY, color, 0.2);
       drawLine(endX, layerMidY, endX, layerEndY, color);
     }
 
-    ctx.fillStyle = color;
-    ctx.fillText(label, textX, layerTextY);
+    if(!collapsed) {
+      ctx.fillStyle = color;
+      ctx.fillText(label, textX, layerTextY);
+    }
   }
 
   function drawAxis() {
@@ -139,5 +158,6 @@ function draw() {
   drawAxis();
   data
     .map((p, i)=>calculatePosition(p))
+    .sort((a,b)=>b.layer===a.layer?b.row-a.row:b.layer-a.layer)
     .forEach((p, i)=>draw(p));
 };

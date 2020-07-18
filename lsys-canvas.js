@@ -26,7 +26,7 @@ class LsysCanvas extends HTMLElement {
 
   allowedTransform = {
     zoom: true,
-    zoomView: false,
+    zoomView: [false, false],
     translate: [true, true],
   }
 
@@ -128,11 +128,17 @@ class LsysCanvas extends HTMLElement {
   }
 
   updateSize() {
+    const gfxfont = this.gfx.font;
+    const uifont = this.ui.font;
+
     const [{height, width}] = this.getClientRects();
     this.gfxCanvas.width = width;
     this.gfxCanvas.height = height;
     this.uiCanvas.width = width;
     this.uiCanvas.height = height;
+
+    this.gfx.font = gfxfont;
+    this.ui.font = uifont;
 
     this.emit('update');
   }
@@ -143,10 +149,8 @@ class LsysCanvas extends HTMLElement {
     //console.log(e, zoom);
     this.currentTransform.zoom *= 1+Math.sign(zoom)/10;
 
-    if(this.allowedTransform.zoomView){
-      this.currentTransform.translate[0] *= 1+Math.sign(zoom)/10;
-      this.currentTransform.translate[1] *= 1+Math.sign(zoom)/10;
-    }
+    if(this.allowedTransform.zoomView[0]) this.currentTransform.translate[0] *= 1+Math.sign(zoom)/10;
+    if(this.allowedTransform.zoomView[1]) this.currentTransform.translate[1] *= 1+Math.sign(zoom)/10;
 
     if (lastPoints[0] && e[0]) {
       const t = vSub(lastPoints[0], e[0]);
