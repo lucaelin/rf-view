@@ -61,6 +61,7 @@ export default [
   {f: [76e6, 90e6],                 l: rf,      t: 'FM radio',                        rin: 'japan'},
   {f: [2.401e9, 2.483e9],           l: rf,      t: 'Wifi', d: 'a/b/g/n',              },
   {f: [5.150e9, 5.835e9],           l: rf,      t: 'Wifi', d: 'n/ac',                 },
+  {f: [2.4e9, 2.4835e9],            l: rf,      t: 'Bluetooth',                       },
   {f: 103.7e6,                      l: rf,      t: 'NDR Info',                        rin: 'germany' },
   {f: 2.455e9,                      l: rf,      t: 'Microwave Oven',                  },
   {f: [380.2e6, 389.8e6],           l: rf,      t: 'GSM', d: 'T-GSM-380 Uplink',      },
@@ -89,6 +90,7 @@ export default [
   {f: [10.7e9, 12.75e9],            l: rf,      t: 'DVB-S',                           rin: 'europe'},
   {f: [177.5e6, 226.5e6],           l: rf,      t: 'DVB-T',                           rin: 'europe'},
   {f: [474.0e6, 786.0e6],           l: rf,      t: 'DVB-T',                           rin: 'europe'},
+  {f: [1880.0e6, 1900.0e6],         l: rf,      t: 'DECT',                            rin: 'germany'},
 
   // https://www.thethingsnetwork.org/docs/lorawan/frequencies-by-country.html
   {f: 433e6,                        l: rf,      t: 'LORA',                            rin: 'europe russia'},
